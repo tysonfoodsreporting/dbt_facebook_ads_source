@@ -46,7 +46,7 @@ final as (
     select
         source_relation, 
         _fivetran_id,
-        CAST(FORMAT_TIMESTAMP("%F %T", _fivetran_synced, "America/New_York") AS TIMESTAMP) as _fivetran_synced,        --EST Converison
+        CAST(FORMAT_TIMESTAMP("%F %T", _fivetran_synced, "America/Chicago") AS TIMESTAMP) as _fivetran_synced,        --Central Converison
         cast(id as {{ dbt.type_bigint() }}) as creative_id,
         cast(account_id as {{ dbt.type_bigint() }}) as account_id,
         name as creative_name,

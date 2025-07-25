@@ -36,7 +36,7 @@ final as (
 
     select
         source_relation, 
-        CAST(FORMAT_TIMESTAMP("%F %T", updated_time, "America/New_York") AS TIMESTAMP) as updated_at,     --EST Conversion
+        CAST(FORMAT_TIMESTAMP("%F %T", updated_time, "America/Chicago") AS TIMESTAMP) as updated_at,     --Central Conversion
         cast(id as {{ dbt.type_bigint() }}) as ad_id,
         name as ad_name,
         cast(account_id as {{ dbt.type_bigint() }}) as account_id,

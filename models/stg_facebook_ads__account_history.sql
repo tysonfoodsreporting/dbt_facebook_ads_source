@@ -37,12 +37,12 @@ final as (
     select
         source_relation, 
         cast(id as {{ dbt.type_bigint() }}) as account_id,
-        CAST(FORMAT_TIMESTAMP("%F %T", _fivetran_synced, "America/New_York") AS TIMESTAMP) as _fivetran_synced,    --EST Conversion
+        CAST(FORMAT_TIMESTAMP("%F %T", _fivetran_synced, "America/Chicago") AS TIMESTAMP) as _fivetran_synced,    --Central Conversion
         name as account_name,
         account_status,
         business_country_code,
         business_state,
-        CAST(FORMAT_TIMESTAMP("%F %T", created_time, "America/New_York") AS TIMESTAMP)  as created_at,        --EST Conversion 
+        CAST(FORMAT_TIMESTAMP("%F %T", created_time, "America/Chicago") AS TIMESTAMP)  as created_at,        --Central Conversion 
         currency,
         timezone_name,
         timezone_offset_hours_utc,
