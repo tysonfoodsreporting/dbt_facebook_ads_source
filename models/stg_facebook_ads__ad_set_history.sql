@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__facebook_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__facebook_ads_enabled', True),
+    unique_key = ['source_relation','ad_set_id','updated_at'],
+    partition_by={
+      "field": "updated_at", 
+      "data_type": "TIMESTAMP",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -29,13 +36,13 @@ final as (
 
     select
         source_relation, 
-        updated_time as updated_at,
+        CAST(FORMAT_TIMESTAMP("%F %T", updated_time, "America/New_York") AS TIMESTAMP) as updated_at,    --EST Conversion
         cast(id as {{ dbt.type_bigint() }}) as ad_set_id,
         name as ad_set_name,
         cast(account_id as {{ dbt.type_bigint() }}) as account_id,
         cast(campaign_id as {{ dbt.type_bigint() }}) as campaign_id,
-        start_time as start_at,
-        end_time as end_at,
+        CAST(FORMAT_TIMESTAMP("%F %T", start_time, "America/New_York") AS TIMESTAMP)as start_at,    --EST Conversion
+        CAST(FORMAT_TIMESTAMP("%F %T", end_time, "America/New_York") AS TIMESTAMP) as end_at,    --EST Conversion 
         bid_strategy,
         daily_budget,
         budget_remaining,
