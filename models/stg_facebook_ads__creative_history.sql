@@ -67,4 +67,4 @@ final as (
 )
 
 select * 
-from final
+from final where creative_id is not null
