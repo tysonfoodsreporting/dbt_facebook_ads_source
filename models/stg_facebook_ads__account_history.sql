@@ -48,4 +48,4 @@ final as (
 )
 
 select * 
-from final
+from final where account_id is not null
