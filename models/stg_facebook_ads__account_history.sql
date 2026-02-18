@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__facebook_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__facebook_ads_enabled', True),
+    unique_key = ['source_relation','account_id','_fivetran_synced'],
+    partition_by={
+      "field": "_fivetran_synced", 
+      "data_type": "TIMESTAMP",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -30,12 +37,12 @@ final as (
     select
         source_relation, 
         cast(id as {{ dbt.type_bigint() }}) as account_id,
-        _fivetran_synced,
+        CAST(FORMAT_TIMESTAMP("%F %T", _fivetran_synced, "America/Chicago") AS TIMESTAMP) as _fivetran_synced,    --Central Conversion
         name as account_name,
         account_status,
         business_country_code,
         business_state,
-        created_time as created_at,
+        CAST(FORMAT_TIMESTAMP("%F %T", created_time, "America/Chicago") AS TIMESTAMP)  as created_at,        --Central Conversion 
         currency,
         timezone_name,
         timezone_offset_hours_utc,

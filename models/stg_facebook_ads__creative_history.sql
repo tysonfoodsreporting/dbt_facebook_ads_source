@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__facebook_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__facebook_ads_enabled', True),
+    unique_key = ['source_relation','creative_id','_fivetran_synced'],
+    partition_by={
+      "field": "_fivetran_synced", 
+      "data_type": "TIMESTAMP",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -39,7 +46,7 @@ final as (
     select
         source_relation, 
         _fivetran_id,
-        _fivetran_synced,
+        CAST(FORMAT_TIMESTAMP("%F %T", _fivetran_synced, "America/Chicago") AS TIMESTAMP) as _fivetran_synced,        --Central Converison
         cast(id as {{ dbt.type_bigint() }}) as creative_id,
         cast(account_id as {{ dbt.type_bigint() }}) as account_id,
         name as creative_name,
